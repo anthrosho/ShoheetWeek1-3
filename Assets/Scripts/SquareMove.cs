@@ -55,12 +55,10 @@ public class SquareMove : MonoBehaviour
 
 
         }
+        //This belongs on branch test 2!
+        //This comment belongs to main!
+        //They're both merged!
 
-       //This belongs on branch test 2!
-
-
-
-        }
 
     }
 }
