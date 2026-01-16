@@ -22,7 +22,7 @@ public class SquareMove : MonoBehaviour
             transform.position = newPosition;
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKey(KeyCode.S))
         {
             Vector3 newPosition = transform.position;
             newPosition.y = newPosition.y - 0.1f;
@@ -31,14 +31,14 @@ public class SquareMove : MonoBehaviour
         }
 
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKey(KeyCode.D))
         {
             Vector3 newPosition = transform.position;
             newPosition.x = newPosition.x + 0.1f;
             transform.position = newPosition;
         }
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKey(KeyCode.A))
         {
             Vector3 newPosition = transform.position;
             newPosition.x = newPosition.x - 0.1f;
