@@ -48,6 +48,14 @@ public class SquareMove : MonoBehaviour
 
         }
 
+        if (Input.GetKey(KeyCode.Space))
+        {
+            print("Spacebar test");
+
+
+
+        }
+
 
     }
 }
