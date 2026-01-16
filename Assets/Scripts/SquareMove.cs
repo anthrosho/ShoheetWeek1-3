@@ -55,7 +55,7 @@ public class SquareMove : MonoBehaviour
 
 
         }
-
+        //This comment belongs to main!
 
     }
 }
