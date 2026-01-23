@@ -1,10 +1,14 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SquareMove : MonoBehaviour
 {
+    public float rotationSpeed;
 
-    public float moveSpeed = 1;
+ 
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -48,13 +52,6 @@ public class SquareMove : MonoBehaviour
 
         }
 
-        if (Input.GetKey(KeyCode.Space))
-        {
-            print("Spacebar test");
-
-
-
-        }
         //This belongs on branch test 2!
         //This comment belongs to main!
         //They're both merged!
