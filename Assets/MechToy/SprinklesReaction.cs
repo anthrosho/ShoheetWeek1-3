@@ -9,10 +9,10 @@ public class SprinklesReaction : MonoBehaviour
 
     // Positions
 
-    public Vector3 presentPosition;
-    public Vector3 stickPosition;  
-    public Vector3 feedPosition;
-    
+    public Transform presentSprinkles;
+    public Transform stickSprinkles;
+    public Transform feedSprinkles;
+
     private Transform currentImage;
     Vector3 startPosition;
     public Vector3 imageVisiblePosition = Vector3.zero;
@@ -44,10 +44,16 @@ public class SprinklesReaction : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        defaultPosition = transform.localPosition;
 
-        currentImage = neutralSprinkles;
-        currentImage.localPosition = imageVisiblePosition;
+
+
+
+        neutralSprinkles.localPosition = imageVisiblePosition;
+        happySprinkles.localPosition = imageHiddenPosition;
+        grumpySprinkles.localPosition = imageHiddenPosition;
+
+        CheckMouseHover();
+        UpdateSprinklePositions();
 
     }
 
@@ -84,6 +90,8 @@ public class SprinklesReaction : MonoBehaviour
         Vector3 SprinklesNeutral = imageHiddenPosition;
         Vector3 SprinklesHappy = imageHiddenPosition;
         Vector3 SprinklesGrumpy = imageHiddenPosition;
+
+
 
         if (isNeutral) SprinklesNeutral = imageVisiblePosition;
         if (isHappy) SprinklesHappy = imageVisiblePosition;
