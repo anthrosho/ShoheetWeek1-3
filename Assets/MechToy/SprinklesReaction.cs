@@ -36,9 +36,27 @@ public class SprinklesReaction : MonoBehaviour
 
     public int currentEmotion = 0;
 
+
+    // Sprinkles Petting
+    public Transform sprinklesBody;
+    public Transform sprinklesPetting;
+
+    public Vector3 headOffset;
+    public Vector2 pettingAreaSize;
+
+    public Vector3 normalScale = Vector3.one;
+    public Vector3 squishScale = new Vector3(1.2f, 0.8f, 1f);
+
+    public AnimationCurve squishCurve;
+    public float squishSpeed = 3f;
+
+    float squishTime = 0f;
+    bool isPetting = false;
+
     void Start()
     {
         defaultPosition = transform.localPosition;
+        sprinklesBody.localScale = normalScale;
 
         neutralSprinkles.localPosition = imageHiddenPosition;
         happySprinkles.localPosition = imageHiddenPosition;
@@ -48,6 +66,7 @@ public class SprinklesReaction : MonoBehaviour
         SprinkleEating.localPosition = imageHiddenPosition;
         SprinkleLookStick.localPosition = imageHiddenPosition;
         SprinklesAboutToFeed.localPosition = imageHiddenPosition;
+        sprinklesPetting.localPosition = new Vector3(0, -10000f, 0);
 
         currentEmotion = 0;
         UpdateDefaultImages();
@@ -56,6 +75,42 @@ public class SprinklesReaction : MonoBehaviour
     void Update()
     {
         transform.localPosition = Vector3.Lerp(transform.localPosition, defaultPosition, Time.deltaTime * lerpSpeed);
+        Vector3 mouseScreen = Mouse.current.position.ReadValue();
+        Vector3 mouseWorld = gameCamera.ScreenToWorldPoint(mouseScreen);
+        mouseWorld.z = 0f;
+
+        isPetting = false;
+
+        Vector3 headWorldPosition = sprinklesBody.position + headOffset;
+
+        if (mouseWorld.x >= headWorldPosition.x - pettingAreaSize.x / 2f &&
+            mouseWorld.x <= headWorldPosition.x + pettingAreaSize.x / 2f &&
+            mouseWorld.y >= headWorldPosition.y - pettingAreaSize.y / 2f &&
+            mouseWorld.y <= headWorldPosition.y + pettingAreaSize.y / 2f)
+        {
+            isPetting = true;
+        }
+
+        if (isPetting)
+        {
+            squishTime += Time.deltaTime * squishSpeed;
+            if (squishTime > 1f) squishTime = 1f;
+            sprinklesPetting.localPosition = Vector3.zero;
+        }
+        else
+        {
+            squishTime -= Time.deltaTime * squishSpeed;
+            if (squishTime < 0f) squishTime = 0f;
+            sprinklesPetting.localPosition = new Vector3(0, -10000f, 0);
+        }
+
+        float curveValue = squishCurve.Evaluate(squishTime);
+
+        sprinklesBody.localScale = Vector3.Lerp(
+            normalScale,
+            squishScale,
+            curveValue
+        );
 
         CheckMouseZones();
         UpdateDefaultImages();
