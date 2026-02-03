@@ -40,13 +40,21 @@ public class SprinklesReaction : MonoBehaviour
     public Vector3 pettingLocalPosition;
     public Vector2 pettingAreaSize;
 
+    public Transform sprinklesCheek;
+    public Vector3 cheekLocalPosition;
+    public Vector2 cheekAreaSize;
+
     public Vector3 normalScale = Vector3.one;
     public Vector3 squishScale = new Vector3(1.2f, 0.8f, 1f);
+    public Vector3 cheekSquishScale = new Vector3(0.8f, 1.2f, 1f);
     public AnimationCurve squishCurve;
     public float squishSpeed = 3f;
 
     float squishTime = 0f;
     bool isPetting = false;
+
+    float cheekSquishTime = 0f;
+    bool isCheek = false;
 
     void Start()
     {
@@ -64,6 +72,9 @@ public class SprinklesReaction : MonoBehaviour
         sprinklesPetting.localPosition = imageHiddenPosition;
         sprinklesPetting.localScale = normalScale;
 
+        sprinklesCheek.localPosition = imageHiddenPosition;
+        sprinklesCheek.localScale = normalScale;
+
         currentEmotion = 0;
         UpdateDefaultImages();
     }
@@ -76,10 +87,11 @@ public class SprinklesReaction : MonoBehaviour
         Vector3 mouseWorld = gameCamera.ScreenToWorldPoint(mouseScreen);
         mouseWorld.z = 0f;
 
-        // Reset petting flag
+        // Reset flags
         isPetting = false;
+        isCheek = false;
 
-        // Petting detection relative to fixed local position of petting image
+        // Detect petting area
         Vector3 pettingWorldPos = transform.position + pettingLocalPosition;
         if (mouseWorld.x >= pettingWorldPos.x - pettingAreaSize.x / 2f &&
             mouseWorld.x <= pettingWorldPos.x + pettingAreaSize.x / 2f &&
@@ -89,7 +101,17 @@ public class SprinklesReaction : MonoBehaviour
             isPetting = true;
         }
 
-        // Petting behavior
+        // Detect cheek area
+        Vector3 cheekWorldPos = transform.position + cheekLocalPosition;
+        if (mouseWorld.x >= cheekWorldPos.x - cheekAreaSize.x / 2f &&
+            mouseWorld.x <= cheekWorldPos.x + cheekAreaSize.x / 2f &&
+            mouseWorld.y >= cheekWorldPos.y - cheekAreaSize.y / 2f &&
+            mouseWorld.y <= cheekWorldPos.y + cheekAreaSize.y / 2f)
+        {
+            isCheek = true;
+        }
+
+        // Petting logic
         if (isPetting)
         {
             neutralSprinkles.localPosition = imageHiddenPosition;
@@ -100,6 +122,7 @@ public class SprinklesReaction : MonoBehaviour
 
             squishTime += Time.deltaTime * squishSpeed;
             if (squishTime > 1f) squishTime = 1f;
+
             float curveValue = squishCurve.Evaluate(squishTime);
             sprinklesPetting.localScale = Vector3.Lerp(normalScale, squishScale, curveValue);
         }
@@ -110,6 +133,30 @@ public class SprinklesReaction : MonoBehaviour
 
             squishTime -= Time.deltaTime * squishSpeed;
             if (squishTime < 0f) squishTime = 0f;
+        }
+
+        // Cheek logic
+        if (isCheek)
+        {
+            neutralSprinkles.localPosition = imageHiddenPosition;
+            happySprinkles.localPosition = imageHiddenPosition;
+            grumpySprinkles.localPosition = imageHiddenPosition;
+
+            sprinklesCheek.localPosition = cheekLocalPosition;
+
+            cheekSquishTime += Time.deltaTime * squishSpeed;
+            if (cheekSquishTime > 1f) cheekSquishTime = 1f;
+
+            float curveValue = squishCurve.Evaluate(cheekSquishTime);
+            sprinklesCheek.localScale = Vector3.Lerp(normalScale, cheekSquishScale, curveValue);
+        }
+        else
+        {
+            sprinklesCheek.localPosition = imageHiddenPosition;
+            sprinklesCheek.localScale = normalScale;
+
+            cheekSquishTime -= Time.deltaTime * squishSpeed;
+            if (cheekSquishTime < 0f) cheekSquishTime = 0f;
         }
 
         CheckMouseZones(mouseWorld);
@@ -175,7 +222,7 @@ public class SprinklesReaction : MonoBehaviour
 
     void UpdateDefaultImages()
     {
-        if (isPetting) return; // hide default images while petting
+        if (isPetting || isCheek) return; // hide default images while petting or cheek
 
         neutralSprinkles.localPosition = imageHiddenPosition;
         happySprinkles.localPosition = imageHiddenPosition;
