@@ -1136,6 +1136,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1619005123}
   - component: {fileID: 1619005122}
+  - component: {fileID: 1619005124}
   m_Layer: 0
   m_Name: SprinklesController
   m_TagString: Untagged
@@ -1165,13 +1166,19 @@ MonoBehaviour:
   SprinkleEating: {fileID: 1049950322}
   SprinkleLookStick: {fileID: 1410192071}
   SprinklesAboutToFeed: {fileID: 1658090277}
+  presentObjectPosition: {x: -6.36, y: 2.83, z: 0}
+  presentObjectSize: {x: 1, y: 1}
+  stickObjectPosition: {x: -6.25, y: -0.49, z: 0}
+  stickObjectSize: {x: 1, y: 1}
   feedObjectPosition: {x: -5.825556, y: -4.127513, z: 0}
-  feedObjectSize: {x: -5.825556, y: -4.127513}
-  feedApproachSize: {x: 7, y: 7}
+  feedObjectSize: {x: 4, y: 4}
+  feedApproachSize: {x: 6, y: 6}
   gameCamera: {fileID: 757936105}
   lerpSpeed: 5
-  isHoveringFeed: 0
-  isApproachingFeed: 0
+  hoveringPresent: 0
+  hoveringStick: 0
+  hoveringFeed: 0
+  approachingFeed: 0
   currentEmotion: 0
 --- !u!4 &1619005123
 Transform:
@@ -1195,6 +1202,50 @@ Transform:
   - {fileID: 1049950322}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1619005124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619005121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117df9a1f08562b459cbac560788f611, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprinklesBody: {fileID: 1619005123}
+  sprinklesPetting: {fileID: 2058308153}
+  headOffset: {x: 0, y: 0, z: 0}
+  pettingAreaSize: {x: 12.99179, y: -1.723986}
+  normalScale: {x: 1, y: 1, z: 1}
+  squishScale: {x: 1.2, y: 0.8, z: 1}
+  squishCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  gameCamera: {fileID: 757936105}
+  squishSpeed: 3
 --- !u!1 &1658090275
 GameObject:
   m_ObjectHideFlags: 0
