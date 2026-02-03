@@ -3,10 +3,6 @@ using UnityEngine.InputSystem;
 
 public class SprinklesReaction : MonoBehaviour
 {
-    public bool present;
-    public bool stick;
-    public bool feed;
-
     public Vector3 defaultPosition;
     public Vector3 imageVisiblePosition = Vector3.zero;
     public Vector3 imageHiddenPosition = new Vector3(0, -10000f, 0);
@@ -18,19 +14,25 @@ public class SprinklesReaction : MonoBehaviour
     public Transform SprinkleHoldPresent;
     public Transform SprinkleEating;
     public Transform SprinkleLookStick;
+    public Transform SprinklesAboutToFeed;
 
     public Vector3 presentObjectPosition;
     public Vector2 presentObjectSize;
+
     public Vector3 stickObjectPosition;
     public Vector2 stickObjectSize;
+
     public Vector3 feedObjectPosition;
     public Vector2 feedObjectSize;
+    public Vector2 feedApproachSize;
 
     public Camera gameCamera;
-
     public float lerpSpeed = 5f;
 
-    public bool isHovering = false;
+    public bool hoveringPresent;
+    public bool hoveringStick;
+    public bool hoveringFeed;
+    public bool approachingFeed;
 
     public int currentEmotion = 0;
 
@@ -45,101 +47,94 @@ public class SprinklesReaction : MonoBehaviour
         SprinkleHoldPresent.localPosition = imageHiddenPosition;
         SprinkleEating.localPosition = imageHiddenPosition;
         SprinkleLookStick.localPosition = imageHiddenPosition;
+        SprinklesAboutToFeed.localPosition = imageHiddenPosition;
 
         currentEmotion = 0;
-        UpdateImagePositions();
+        UpdateDefaultImages();
     }
 
     void Update()
     {
         transform.localPosition = Vector3.Lerp(transform.localPosition, defaultPosition, Time.deltaTime * lerpSpeed);
 
-        CheckMouseOverObjects();
-        UpdateImagePositions();
+        CheckMouseZones();
+        UpdateDefaultImages();
     }
 
-    void CheckMouseOverObjects()
+    void CheckMouseZones()
     {
-        Vector3 currentMousePosition = Mouse.current.position.ReadValue();
-        Vector3 worldMousePosition = gameCamera.ScreenToWorldPoint(currentMousePosition);
-        worldMousePosition.z = 0f;
+        Vector3 mouseScreen = Mouse.current.position.ReadValue();
+        Vector3 mouseWorld = gameCamera.ScreenToWorldPoint(mouseScreen);
+        mouseWorld.z = 0f;
 
-        present = false;
-        stick = false;
-        feed = false;
-        isHovering = false;
+        hoveringPresent = false;
+        hoveringStick = false;
+        hoveringFeed = false;
+        approachingFeed = false;
 
         SprinkleHoldPresent.localPosition = imageHiddenPosition;
         SprinkleEating.localPosition = imageHiddenPosition;
         SprinkleLookStick.localPosition = imageHiddenPosition;
+        SprinklesAboutToFeed.localPosition = imageHiddenPosition;
 
-        if (worldMousePosition.x >= presentObjectPosition.x - presentObjectSize.x / 2f &&
-            worldMousePosition.x <= presentObjectPosition.x + presentObjectSize.x / 2f &&
-            worldMousePosition.y >= presentObjectPosition.y - presentObjectSize.y / 2f &&
-            worldMousePosition.y <= presentObjectPosition.y + presentObjectSize.y / 2f)
+        if (mouseWorld.x >= feedObjectPosition.x - feedApproachSize.x / 2f &&
+            mouseWorld.x <= feedObjectPosition.x + feedApproachSize.x / 2f &&
+            mouseWorld.y >= feedObjectPosition.y - feedApproachSize.y / 2f &&
+            mouseWorld.y <= feedObjectPosition.y + feedApproachSize.y / 2f)
         {
-            present = true;
-            isHovering = true;
-            SprinkleHoldPresent.localPosition = imageVisiblePosition;
-            neutralSprinkles.localPosition = imageHiddenPosition;
-            happySprinkles.localPosition = imageHiddenPosition;
-            grumpySprinkles.localPosition = imageHiddenPosition;
-            return;
+            approachingFeed = true;
+            SprinklesAboutToFeed.localPosition = imageVisiblePosition;
         }
 
-        if (worldMousePosition.x >= stickObjectPosition.x - stickObjectSize.x / 2f &&
-            worldMousePosition.x <= stickObjectPosition.x + stickObjectSize.x / 2f &&
-            worldMousePosition.y >= stickObjectPosition.y - stickObjectSize.y / 2f &&
-            worldMousePosition.y <= stickObjectPosition.y + stickObjectSize.y / 2f)
+        if (mouseWorld.x >= feedObjectPosition.x - feedObjectSize.x / 2f &&
+            mouseWorld.x <= feedObjectPosition.x + feedObjectSize.x / 2f &&
+            mouseWorld.y >= feedObjectPosition.y - feedObjectSize.y / 2f &&
+            mouseWorld.y <= feedObjectPosition.y + feedObjectSize.y / 2f)
         {
-            stick = true;
-            isHovering = true;
-            SprinkleLookStick.localPosition = imageVisiblePosition;
-            neutralSprinkles.localPosition = imageHiddenPosition;
-            happySprinkles.localPosition = imageHiddenPosition;
-            grumpySprinkles.localPosition = imageHiddenPosition;
-            return;
-        }
-
-        if (worldMousePosition.x >= feedObjectPosition.x - feedObjectSize.x / 2f &&
-            worldMousePosition.x <= feedObjectPosition.x + feedObjectSize.x / 2f &&
-            worldMousePosition.y >= feedObjectPosition.y - feedObjectSize.y / 2f &&
-            worldMousePosition.y <= feedObjectPosition.y + feedObjectSize.y / 2f)
-        {
-            feed = true;
-            isHovering = true;
+            hoveringFeed = true;
+            approachingFeed = false;
+            SprinklesAboutToFeed.localPosition = imageHiddenPosition;
             SprinkleEating.localPosition = imageVisiblePosition;
-            neutralSprinkles.localPosition = imageHiddenPosition;
-            happySprinkles.localPosition = imageHiddenPosition;
-            grumpySprinkles.localPosition = imageHiddenPosition;
+            currentEmotion = 0;
             return;
         }
 
-        if (!isHovering)
+        if (mouseWorld.x >= presentObjectPosition.x - presentObjectSize.x / 2f &&
+            mouseWorld.x <= presentObjectPosition.x + presentObjectSize.x / 2f &&
+            mouseWorld.y >= presentObjectPosition.y - presentObjectSize.y / 2f &&
+            mouseWorld.y <= presentObjectPosition.y + presentObjectSize.y / 2f)
         {
-            if (present) currentEmotion = 1;
-            if (stick) currentEmotion = 2;
-            if (feed) currentEmotion = 0;
+            hoveringPresent = true;
+            SprinkleHoldPresent.localPosition = imageVisiblePosition;
+            currentEmotion = 1;
+            return;
+        }
+
+        if (mouseWorld.x >= stickObjectPosition.x - stickObjectSize.x / 2f &&
+            mouseWorld.x <= stickObjectPosition.x + stickObjectSize.x / 2f &&
+            mouseWorld.y >= stickObjectPosition.y - stickObjectSize.y / 2f &&
+            mouseWorld.y <= stickObjectPosition.y + stickObjectSize.y / 2f)
+        {
+            hoveringStick = true;
+            SprinkleLookStick.localPosition = imageVisiblePosition;
+            currentEmotion = 2;
+            return;
         }
     }
 
-    void UpdateImagePositions()
+    void UpdateDefaultImages()
     {
-        if (isHovering)
-        {
-            neutralSprinkles.localPosition = imageHiddenPosition;
-            happySprinkles.localPosition = imageHiddenPosition;
-            grumpySprinkles.localPosition = imageHiddenPosition;
-            return;
-        }
-
         neutralSprinkles.localPosition = imageHiddenPosition;
         happySprinkles.localPosition = imageHiddenPosition;
         grumpySprinkles.localPosition = imageHiddenPosition;
+
+        if (hoveringPresent) return;
+        if (hoveringStick) return;
+        if (hoveringFeed) return;
+        if (approachingFeed) return;
 
         if (currentEmotion == 0) neutralSprinkles.localPosition = imageVisiblePosition;
         if (currentEmotion == 1) happySprinkles.localPosition = imageVisiblePosition;
         if (currentEmotion == 2) grumpySprinkles.localPosition = imageVisiblePosition;
     }
 }
-
