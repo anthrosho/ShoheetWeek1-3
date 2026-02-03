@@ -36,16 +36,12 @@ public class SprinklesReaction : MonoBehaviour
 
     public int currentEmotion = 0;
 
-    // Sprinkles Petting
-    public Transform sprinklesBody;
     public Transform sprinklesPetting;
-
-    public Vector3 headOffset;
+    public Vector3 pettingLocalPosition;
     public Vector2 pettingAreaSize;
 
     public Vector3 normalScale = Vector3.one;
     public Vector3 squishScale = new Vector3(1.2f, 0.8f, 1f);
-
     public AnimationCurve squishCurve;
     public float squishSpeed = 3f;
 
@@ -55,7 +51,6 @@ public class SprinklesReaction : MonoBehaviour
     void Start()
     {
         defaultPosition = transform.localPosition;
-        sprinklesBody.localScale = normalScale;
 
         neutralSprinkles.localPosition = imageHiddenPosition;
         happySprinkles.localPosition = imageHiddenPosition;
@@ -65,7 +60,9 @@ public class SprinklesReaction : MonoBehaviour
         SprinkleEating.localPosition = imageHiddenPosition;
         SprinkleLookStick.localPosition = imageHiddenPosition;
         SprinklesAboutToFeed.localPosition = imageHiddenPosition;
+
         sprinklesPetting.localPosition = imageHiddenPosition;
+        sprinklesPetting.localScale = normalScale;
 
         currentEmotion = 0;
         UpdateDefaultImages();
@@ -79,30 +76,28 @@ public class SprinklesReaction : MonoBehaviour
         Vector3 mouseWorld = gameCamera.ScreenToWorldPoint(mouseScreen);
         mouseWorld.z = 0f;
 
+        // Reset petting flag
         isPetting = false;
 
-        Vector3 headWorldPosition = sprinklesBody.position + headOffset;
-
-        // Petting detection
-        if (mouseWorld.x >= headWorldPosition.x - pettingAreaSize.x / 2f &&
-            mouseWorld.x <= headWorldPosition.x + pettingAreaSize.x / 2f &&
-            mouseWorld.y >= headWorldPosition.y - pettingAreaSize.y / 2f &&
-            mouseWorld.y <= headWorldPosition.y + pettingAreaSize.y / 2f)
+        // Petting detection relative to fixed local position of petting image
+        Vector3 pettingWorldPos = transform.position + pettingLocalPosition;
+        if (mouseWorld.x >= pettingWorldPos.x - pettingAreaSize.x / 2f &&
+            mouseWorld.x <= pettingWorldPos.x + pettingAreaSize.x / 2f &&
+            mouseWorld.y >= pettingWorldPos.y - pettingAreaSize.y / 2f &&
+            mouseWorld.y <= pettingWorldPos.y + pettingAreaSize.y / 2f)
         {
             isPetting = true;
         }
 
+        // Petting behavior
         if (isPetting)
         {
-            // Hide default sprinkle images
             neutralSprinkles.localPosition = imageHiddenPosition;
             happySprinkles.localPosition = imageHiddenPosition;
             grumpySprinkles.localPosition = imageHiddenPosition;
 
-            // TP in petting image
-            sprinklesPetting.localPosition = Vector3.zero;
+            sprinklesPetting.localPosition = pettingLocalPosition;
 
-            // Squish animation
             squishTime += Time.deltaTime * squishSpeed;
             if (squishTime > 1f) squishTime = 1f;
             float curveValue = squishCurve.Evaluate(squishTime);
@@ -110,25 +105,19 @@ public class SprinklesReaction : MonoBehaviour
         }
         else
         {
-            // Hide petting image and reset scale
             sprinklesPetting.localPosition = imageHiddenPosition;
             sprinklesPetting.localScale = normalScale;
 
-            // Decrease squish
             squishTime -= Time.deltaTime * squishSpeed;
             if (squishTime < 0f) squishTime = 0f;
         }
 
-        CheckMouseZones();
+        CheckMouseZones(mouseWorld);
         UpdateDefaultImages();
     }
 
-    void CheckMouseZones()
+    void CheckMouseZones(Vector3 mouseWorld)
     {
-        Vector3 mouseScreen = Mouse.current.position.ReadValue();
-        Vector3 mouseWorld = gameCamera.ScreenToWorldPoint(mouseScreen);
-        mouseWorld.z = 0f;
-
         hoveringPresent = false;
         hoveringStick = false;
         hoveringFeed = false;
@@ -186,6 +175,8 @@ public class SprinklesReaction : MonoBehaviour
 
     void UpdateDefaultImages()
     {
+        if (isPetting) return; // hide default images while petting
+
         neutralSprinkles.localPosition = imageHiddenPosition;
         happySprinkles.localPosition = imageHiddenPosition;
         grumpySprinkles.localPosition = imageHiddenPosition;
@@ -194,7 +185,6 @@ public class SprinklesReaction : MonoBehaviour
         if (hoveringStick) return;
         if (hoveringFeed) return;
         if (approachingFeed) return;
-        if (isPetting) return;
 
         if (currentEmotion == 0) neutralSprinkles.localPosition = imageVisiblePosition;
         if (currentEmotion == 1) happySprinkles.localPosition = imageVisiblePosition;

@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 64257169}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -24.698206, y: 2.5360136, z: 0.0040751}
+  m_LocalPosition: {x: -24.698206, y: 2.5360136, z: 0}
   m_LocalScale: {x: 0.7811, y: 0.7843, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -685,7 +685,7 @@ Transform:
   m_GameObject: {fileID: 968767052}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -13.99, y: 2.66, z: 0.0040751}
+  m_LocalPosition: {x: -13.99, y: 2.66, z: 0}
   m_LocalScale: {x: 0.7811, y: 0.7843, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1179,6 +1179,36 @@ MonoBehaviour:
   hoveringFeed: 0
   approachingFeed: 0
   currentEmotion: 0
+  sprinklesPetting: {fileID: 2058308153}
+  pettingLocalPosition: {x: 0, y: 0, z: 0}
+  pettingAreaSize: {x: 2, y: 2}
+  normalScale: {x: 0.7811, y: -1.723986, z: 0}
+  squishScale: {x: 1.2, y: 0.8, z: 1}
+  squishCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  squishSpeed: 3
 --- !u!4 &1619005123
 Transform:
   m_ObjectHideFlags: 0
