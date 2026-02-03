@@ -1155,26 +1155,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35ab1e4bcbdaa5d4a88f281689613128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameCamera: {fileID: 757936105}
+  defaultPosition: {x: 0, y: 0, z: 0}
   imageVisiblePosition: {x: 12.99179, y: -1.723986, z: 0}
   imageHiddenPosition: {x: -14.21412, y: 2.431289, z: 0}
-  lerpSpeed: 5
   neutralSprinkles: {fileID: 1152070765}
   happySprinkles: {fileID: 968767054}
   grumpySprinkles: {fileID: 64257171}
-  sprinkleHoldPresent: {fileID: 1548412118}
-  sprinkleEating: {fileID: 1049950322}
-  sprinkleLookStick: {fileID: 1410192071}
-  sprinkleAboutToFeed: {fileID: 1658090277}
-  sprinklePetting: {fileID: 2058308153}
-  isNeutral: 1
-  isHappy: 0
-  isGrumpy: 0
-  present: 0
-  stick: 0
-  feed: 0
-  petHeadOffset: {x: 1, y: 1, z: 0}
-  petAreaSize: {x: 2, y: 2}
+  SprinkleHoldPresent: {fileID: 1548412118}
+  SprinkleEating: {fileID: 1049950322}
+  SprinkleLookStick: {fileID: 1410192071}
+  SprinklesAboutToFeed: {fileID: 1658090277}
+  SprinklePetting: {fileID: 2058308153}
+  presentObjectPosition: {x: 4, y: 4, z: 0}
+  presentObjectSize: {x: 2, y: 2}
+  stickObjectPosition: {x: -6.25, y: -0.49, z: 0}
+  stickObjectSize: {x: 1, y: 1}
+  feedObjectPosition: {x: -5.825556, y: -4.127513, z: 0}
+  feedObjectSize: {x: 1, y: 1}
+  feedApproachSize: {x: 3, y: 3}
+  petHeadOffset: {x: 0, y: 0.5, z: 0}
+  petAreaSize: {x: 1, y: 0.5}
+  gameCamera: {fileID: 757936105}
+  lerpSpeed: 5
   normalScale: {x: 1, y: 1, z: 1}
   squishScale: {x: 1.2, y: 0.8, z: 1}
   squishCurve:
@@ -1201,9 +1203,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  feedObjectPosition: {x: 0, y: 0, z: 0}
-  feedNearDistance: 1.5
-  feedTouchDistance: 0.6
+  hoveringPresent: 0
+  hoveringStick: 0
+  hoveringFeed: 0
+  approachingFeed: 0
+  isPetting: 0
+  currentEmotion: 0
 --- !u!4 &1619005123
 Transform:
   m_ObjectHideFlags: 0
